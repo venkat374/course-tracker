@@ -1,10 +1,10 @@
-# 📚 Course Tracker Fullstack App
+# Course Tracker Fullstack App
 
 A fullstack MERN application for tracking your online course progress — built with React, Node.js, Express, MongoDB, and JWT-based authentication.
 
 ---
 
-## 📦 Features
+## Features
 
 - User authentication (Register / Login / Logout)
 - JWT-based protected routes
@@ -21,7 +21,7 @@ A fullstack MERN application for tracking your online course progress — built 
 
 ---
 
-## 📂 Tech Stack
+## Tech Stack
 
 - **Frontend:** React, React Router, Axios, Bootstrap
 - **Backend:** Node.js, Express, Mongoose, JWT
@@ -30,15 +30,15 @@ A fullstack MERN application for tracking your online course progress — built 
 
 ---
 
-## 🛠️ Getting Started
+## Getting Started
 
-### 🚀 Clone the repository:
+### Clone the repository:
 ```bash
 git clone https://github.com/your-username/course-tracker.git
 cd course-tracker
 ```
 
-### 📦 Install Dependencies:
+### Install Dependencies:
 
 #### Backend:
 ```bash
@@ -52,7 +52,7 @@ cd frontend
 npm install
 ```
 
-### 🔑 Setup Environment Variables
+### Setup Environment Variables
 
 Create a `.env` file in the `course-tracker-fullstack` directory:
 
@@ -64,7 +64,7 @@ PORT=5000
 
 ---
 
-## ▶️ Run the App
+## Run the App
 
 ### Start Backend:
 ```bash
@@ -80,19 +80,19 @@ npm start
 
 ---
 
-## 🌐 Access
+## Access
 
 Frontend: http://localhost:3000/  
 Backend API: http://localhost:5000/
 
 ---
 
-## 📃 License
+## License
 
 This project is licensed for educational and personal use.
 
 ---
 
-## 📺 Credits
+## Credits
 
-Made with ❤️ by [venkat374](https://github.com/venkat374)
+Made by [venkat374](https://github.com/venkat374)
