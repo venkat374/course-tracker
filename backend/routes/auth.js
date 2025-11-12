@@ -3,14 +3,14 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const User = require('../models/user.model'); // Import the User model
+const User = require('../models/user.model');
 
-// --- Register User ---
+//Register User
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Basic validation
+    //validation
     if (!username || !password) {
       return res.status(400).json({ message: 'Please enter all fields.' });
     }
@@ -18,17 +18,17 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 6 characters long.' });
     }
 
-    // Check for existing user
+    //Check for existing user
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: 'Username already exists.' });
     }
 
-    // Hash password
+    //Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create new user
+    //Create new user
     const newUser = new User({
       username,
       password: hashedPassword,
@@ -42,29 +42,29 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// --- Login User ---
+//Login User
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Basic validation
+    //Basic validation
     if (!username || !password) {
       return res.status(400).json({ message: 'Please enter all fields.' });
     }
 
-    // Check for user existence
+    //Check for user existence
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
-    // Validate password
+    //Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials.' });
     }
 
-    // Generate JWT Token
+    //Generate JWT Token
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
