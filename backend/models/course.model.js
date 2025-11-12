@@ -46,4 +46,4 @@ const trackedCourseSchema = new Schema(
     }
 );
 
-module.exports = mongoose.model("TrackedCourse", trackedCourseSchema);
+module.exports = mongoose.model("Courses", trackedCourseSchema);

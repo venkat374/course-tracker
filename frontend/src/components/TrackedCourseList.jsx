@@ -116,7 +116,7 @@ function TrackedCourseList({ loggedInUserId, authToken }) {
 
   return (
     <div className="container mt-4">
-      <h3>Tracked Courses</h3>
+      <h3>Courses</h3>
 
       {loading && <div className="alert alert-info">Loading courses...</div>}
       {message && <div className="alert alert-success">{message}</div>}

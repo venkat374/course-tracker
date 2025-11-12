@@ -13,25 +13,39 @@ import Register from "./components/Register.jsx";
 function App() {
   const [loggedInUserId, setLoggedInUserId] = useState(null);
   const [authToken, setAuthToken] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     const storedUserId = localStorage.getItem("loggedInUserId");
+    const storedUsername = localStorage.getItem("username");
 
-    if (storedToken && storedUserId) {
+    if (storedToken && storedUserId && storedUsername) {
       setAuthToken(storedToken);
       setLoggedInUserId(storedUserId);
+      setUsername(storedUsername);
       axios.defaults.headers.common["x-auth-token"] = storedToken;
     }
+    setLoading(false);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("loggedInUserId");
+    localStorage.removeItem("username");
     setAuthToken(null);
     setLoggedInUserId(null);
     delete axios.defaults.headers.common["x-auth-token"];
   };
+
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-primary" role="status"></div>
+      </div>
+  );
+  }
 
   return (
     <div className="container">
@@ -69,9 +83,7 @@ function App() {
                 <li className="navbar-item">
                   <a href="#" className="nav-link" onClick={handleLogout}>
                     Logout (
-                    {loggedInUserId
-                      ? loggedInUserId.substring(0, 6) + "..."
-                      : ""}
+                    {username ? `${username}` : ""}
                     )
                   </a>
                 </li>

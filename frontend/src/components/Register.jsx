@@ -17,7 +17,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-        `${import.meta.local.VITE_BACKEND_URL}/auth/register`,
+        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
         {
           username,
           password,

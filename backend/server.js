@@ -2,9 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const TrackedCourse = require("./models/trackedCourse.model");
 
 //Express App Setup
 const app = express();
@@ -50,7 +48,7 @@ mongoose
 const authRouter = require("./routes/auth");
 app.use("/auth", authRouter);
 
-const trackedCoursesRouter = require("./routes/trackedCourses");
+const trackedCoursesRouter = require("./routes/courses.routes.js");
 app.use("/tracked-courses", trackedCoursesRouter);
 
 //Root Endpoint

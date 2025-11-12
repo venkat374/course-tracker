@@ -26,6 +26,7 @@ function Login({ setLoggedInUserId, setAuthToken }) {
       // ✅ Store JWT and user info
       localStorage.setItem("authToken", token);
       localStorage.setItem("loggedInUserId", user.id);
+      localStorage.setItem('username', user.username);
 
       // ✅ Update global state in App.jsx
       setAuthToken(token);
