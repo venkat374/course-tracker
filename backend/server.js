@@ -48,8 +48,8 @@ mongoose
 const authRouter = require("./routes/auth");
 app.use("/auth", authRouter);
 
-const trackedCoursesRouter = require("./routes/courses.routes.js");
-app.use("/tracked-courses", trackedCoursesRouter);
+const CoursesRouter = require("./routes/courses.routes.js");
+app.use("/courses", CoursesRouter);
 
 //Root Endpoint
 app.get("/", (req, res) => {

@@ -77,7 +77,7 @@ function CourseList({ loggedInUserId, authToken }) {
     setMessage("");
 
     axios
-      .get(`${backendUrl}/tracked-courses`, {
+      .get(`${backendUrl}/courses`, {
         headers: { "x-auth-token": authToken },
       })
       .then((res) => {
@@ -98,7 +98,7 @@ function CourseList({ loggedInUserId, authToken }) {
     if (!window.confirm("Delete this course? This cannot be undone.")) return;
 
     axios
-      .delete(`${backendUrl}/tracked-courses/${id}`, {
+      .delete(`${backendUrl}/courses/${id}`, {
         headers: { "x-auth-token": authToken },
       })
       .then((res) => {

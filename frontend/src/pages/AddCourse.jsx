@@ -41,7 +41,7 @@ function AddCourse({ loggedInUserId }) {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/tracked-courses/`,
+        `${import.meta.env.VITE_BACKEND_URL}/courses/`,
         newTrackedCourse
       );
       setMessage(response.data.message);

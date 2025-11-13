@@ -25,7 +25,7 @@ function EditCourse({ loggedInUserId }) {
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     axios
-      .get(`${backendUrl}/tracked-courses/${id}`)
+      .get(`${backendUrl}/courses/${id}`)
       .then((response) => {
         const course = response.data;
         setCourseName(course.courseName || "");
@@ -77,7 +77,7 @@ function EditCourse({ loggedInUserId }) {
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL;
       const response = await axios.patch(
-        `${backendUrl}/tracked-courses/${id}`,
+        `${backendUrl}/courses/${id}`,
         updatedCourse
       );
 
