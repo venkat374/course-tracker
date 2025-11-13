@@ -1,9 +1,8 @@
-//frontend/src/components/AddTrackedCourse.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function AddTrackedCourse({ loggedInUserId }) {
+function AddCourse({ loggedInUserId }) {
   const [courseName, setCourseName] = useState("");
   const [status, setStatus] = useState("Ongoing");
   const [instructor, setInstructor] = useState("");
@@ -167,4 +166,4 @@ function AddTrackedCourse({ loggedInUserId }) {
   );
 }
 
-export default AddTrackedCourse;
+export default AddCourse;

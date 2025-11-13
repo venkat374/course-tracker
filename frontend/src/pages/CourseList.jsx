@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-// ✅ Subcomponent for rendering a single course row
+// Subcomponent: one course row
 const CourseRow = ({ course, deleteCourse }) => (
   <tr>
     <td>{course.courseName}</td>
@@ -20,34 +20,35 @@ const CourseRow = ({ course, deleteCourse }) => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          Link
+          View
         </a>
       ) : (
         "N/A"
       )}
     </td>
+
     <td>
       <div className="progress" style={{ width: "100px" }}>
         <div
           className="progress-bar"
           role="progressbar"
           style={{ width: `${course.progress}%` }}
-          aria-valuenow={course.progress}
-          aria-valuemin="0"
-          aria-valuemax="100"
         >
           {course.progress}%
         </div>
       </div>
     </td>
+
     <td>{course.notes || "—"}</td>
     <td>{new Date(course.createdAt).toLocaleDateString()}</td>
     <td>{new Date(course.updatedAt).toLocaleDateString()}</td>
+
     <td>
-      <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "0.5rem" }}>
         <Link to={`/edit/${course._id}`} className="btn btn-sm btn-primary">
           Edit
         </Link>
+
         <button
           onClick={() => deleteCourse(course._id)}
           className="btn btn-sm btn-danger"
@@ -59,8 +60,7 @@ const CourseRow = ({ course, deleteCourse }) => (
   </tr>
 );
 
-// ✅ Main component
-function TrackedCourseList({ loggedInUserId, authToken }) {
+function CourseList({ loggedInUserId, authToken }) {
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -68,11 +68,10 @@ function TrackedCourseList({ loggedInUserId, authToken }) {
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  // Fetch courses
   useEffect(() => {
-    if (!loggedInUserId) {
-      setError("User not logged in. Please log in to view courses.");
-      return;
-    }
+    if (!authToken) return; // ⛔ Do not run before token exists
+    if (!loggedInUserId) return;
 
     setLoading(true);
     setError("");
@@ -82,41 +81,40 @@ function TrackedCourseList({ loggedInUserId, authToken }) {
       .get(`${backendUrl}/tracked-courses`, {
         headers: { "x-auth-token": authToken },
       })
-      .then((response) => {
-        setCourses(response.data);
+      .then((res) => {
+        setCourses(res.data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching courses:", error);
+      .catch((err) => {
+        console.error("Error fetching courses:", err);
         setError(
-          error.response?.data?.message || "Failed to load tracked courses."
+          err.response?.data?.message || "Failed to load tracked courses."
         );
         setLoading(false);
       });
-  }, [loggedInUserId, authToken]);
+  }, [authToken, loggedInUserId]);
 
+  // Delete a course
   const deleteCourse = (id) => {
-    if (!window.confirm("Are you sure you want to delete this course?")) return;
+    if (!window.confirm("Delete this course? This cannot be undone.")) return;
 
     axios
       .delete(`${backendUrl}/tracked-courses/${id}`, {
         headers: { "x-auth-token": authToken },
       })
-      .then((response) => {
-        setMessage(response.data.message || "Course deleted successfully.");
-        setCourses((prev) => prev.filter((course) => course._id !== id));
+      .then((res) => {
+        setMessage(res.data.message || "Course deleted successfully.");
+        setCourses((prev) => prev.filter((c) => c._id !== id));
       })
-      .catch((error) => {
-        console.error("Error deleting course:", error);
-        setError(
-          error.response?.data?.message || "Failed to delete the course."
-        );
+      .catch((err) => {
+        console.error("Error deleting course:", err);
+        setError(err.response?.data?.message || "Failed to delete course.");
       });
   };
 
   return (
     <div className="container mt-4">
-      <h3>Courses</h3>
+      <h3>Your Courses</h3>
 
       {loading && <div className="alert alert-info">Loading courses...</div>}
       {message && <div className="alert alert-success">{message}</div>}
@@ -142,6 +140,7 @@ function TrackedCourseList({ loggedInUserId, authToken }) {
               <th>Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {courses.map((course) => (
               <CourseRow
@@ -157,4 +156,4 @@ function TrackedCourseList({ loggedInUserId, authToken }) {
   );
 }
 
-export default TrackedCourseList;
+export default CourseList;

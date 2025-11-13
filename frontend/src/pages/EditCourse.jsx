@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
-function EditTrackedCourse({ loggedInUserId }) {
+function EditCourse({ loggedInUserId }) {
   const [courseName, setCourseName] = useState("");
   const [status, setStatus] = useState("Ongoing");
   const [instructor, setInstructor] = useState("");
@@ -194,4 +194,4 @@ function EditTrackedCourse({ loggedInUserId }) {
   );
 }
 
-export default EditTrackedCourse;
+export default EditCourse;
