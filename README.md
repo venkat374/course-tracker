@@ -52,14 +52,25 @@ cd frontend
 npm install
 ```
 
+#### (Optional) Root:
+```bash
+npm install build-all
+```
+
 ### Setup Environment Variables
 
-Create a `.env` file in the `course-tracker-fullstack` directory:
+Create a `.env` file in the `backend` directory:
 
 ```bash
 ATLAS_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 PORT=5000
+```
+
+Create a `.env` file in the `frontend` directory:
+
+```bash
+VITE_BACKEND_URL=http://localhost:5000
 ```
 
 ---
@@ -68,28 +79,22 @@ PORT=5000
 
 ### Start Backend:
 ```bash
-cd course-tracker-fullstack
-npm run dev
+cd course-tracker
+npm start
 ```
 
 ### Start Frontend:
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
 
 ---
 
 ## Access
 
-Frontend: http://localhost:3000/  
+Frontend: http://localhost:5173/  
 Backend API: http://localhost:5000/
-
----
-
-## License
-
-This project is licensed for educational and personal use.
 
 ---
 
