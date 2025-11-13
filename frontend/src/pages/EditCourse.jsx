@@ -83,7 +83,7 @@ function EditCourse({ loggedInUserId }) {
 
       setMessage(response.data.message || "Course updated successfully!");
       setTimeout(() => {
-        navigate("/"); // ✅ v6 navigation
+        navigate("/");
       }, 2000);
     } catch (error) {
       console.error("Error updating course:", error);

@@ -6,7 +6,7 @@ function Login({ setLoggedInUserId, setAuthToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // ✅ correct hook name
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -23,16 +23,13 @@ function Login({ setLoggedInUserId, setAuthToken }) {
 
       const { token, user } = response.data;
 
-      // ✅ Store JWT and user info
       localStorage.setItem("authToken", token);
       localStorage.setItem("loggedInUserId", user.id);
       localStorage.setItem('username', user.username);
 
-      // ✅ Update global state in App.jsx
       setAuthToken(token);
       setLoggedInUserId(user.id);
 
-      // ✅ Navigate to dashboard after login
       navigate("/");
     } catch (err) {
       console.error(

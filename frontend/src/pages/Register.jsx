@@ -8,7 +8,7 @@ function Register() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate(); // ✅ correct for React Router v6
+  const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +26,6 @@ function Register() {
 
       setMessage(response.data.message || "Registration successful!");
 
-      // ✅ Redirect to login after short delay
       setTimeout(() => {
         navigate("/login");
       }, 2000);

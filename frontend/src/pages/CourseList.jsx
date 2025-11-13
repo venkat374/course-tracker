@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-// Subcomponent: one course row
 const CourseRow = ({ course, deleteCourse }) => (
   <tr>
     <td>{course.courseName}</td>
@@ -70,7 +69,7 @@ function CourseList({ loggedInUserId, authToken }) {
 
   // Fetch courses
   useEffect(() => {
-    if (!authToken) return; // ⛔ Do not run before token exists
+    if (!authToken) return;
     if (!loggedInUserId) return;
 
     setLoading(true);
