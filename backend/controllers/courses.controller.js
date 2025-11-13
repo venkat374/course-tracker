@@ -1,5 +1,6 @@
 import Courses from "../models/course.model.js";
 
+//get all route controller
 export const getCourses = async (req, res) => {
     try {
         const courses = await Courses.find({ userId: req.userId }).sort({ createdAt: -1 });
@@ -10,6 +11,7 @@ export const getCourses = async (req, res) => {
     }
 };
 
+//put route controller
 export const createCourse = async (req, res) => {
     try {
         const { courseName, status, instructor, completionDate, certificateLink, progress, notes } = req.body;
@@ -38,6 +40,7 @@ export const createCourse = async (req, res) => {
     }
 };
 
+//get by id route controller
 export const getCourse = async (req, res) => {
     try {
         const course = await Courses.findOne({ _id:req.params.id, userId: req.userId});
@@ -52,6 +55,7 @@ export const getCourse = async (req, res) => {
     }
 };
 
+//patch route controller
 export const updatedCourse = async (req, res) => {
     try {
         const course = await Courses.findOne({ _id: req.params.id, userId: req.userId });
@@ -78,6 +82,7 @@ export const updatedCourse = async (req, res) => {
     }
 };
 
+//delete route controller
 export const deletedCourse = async (req, res) => {
     try {
         const result = await Courses.deleteOne({ _id: req.params.id, userId: req.userId });
