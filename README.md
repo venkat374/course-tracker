@@ -1,6 +1,6 @@
 # Course Tracker Fullstack App
 
-A fullstack MERN application for tracking your online course progress — built with React, Node.js, Express, MongoDB, and JWT-based authentication.
+A fullstack MERN application for tracking your online course progress built with React, Node.js, Express, MongoDB, and JWT-based authentication.
 
 ---
 
