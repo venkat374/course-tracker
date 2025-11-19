@@ -23,6 +23,7 @@ function App() {
   const [authToken, setAuthToken] = useState(null);
   const [username, setUsername] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [streak, setstreak] = useState(Number(localStorage.getItem("streak")) || 92);
 
   // Load stored credentials
   useEffect(() => {
@@ -73,6 +74,7 @@ function App() {
         authToken={authToken}
         username={username}
         handleLogout={handleLogout}
+        streak={streak}
       />
 
       <br />
@@ -116,6 +118,7 @@ function App() {
               setLoggedInUserId={setLoggedInUserId}
               setAuthToken={setAuthToken}
               setUsername={setUsername}
+              setstreak={setstreak}
             />
           }
         />

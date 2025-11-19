@@ -26,12 +26,18 @@ function Login({ setLoggedInUserId, setAuthToken }) {
       localStorage.setItem("authToken", token);
       localStorage.setItem("loggedInUserId", user.id);
       localStorage.setItem('username', user.username);
+      localStorage.setItem("streak", user.streak);
 
       setAuthToken(token);
       setLoggedInUserId(user.id);
 
+      if (typeof setstreak === "function") {
+        setstreak(user.streak);
+      }
+  
       navigate("/");
-    } catch (err) {
+    }
+    catch (err) {
       console.error(
         "Login error:",
         err.response?.data?.message || err.message

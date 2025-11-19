@@ -28,7 +28,7 @@ function AddCourse({ loggedInUserId }) {
       return;
     }
 
-    const newTrackedCourse = {
+    const newCourse = {
       userId: loggedInUserId,
       courseName,
       status,
@@ -42,7 +42,7 @@ function AddCourse({ loggedInUserId }) {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/courses/`,
-        newTrackedCourse
+        newCourse
       );
       setMessage(response.data.message);
 

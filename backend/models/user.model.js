@@ -17,6 +17,14 @@ const userSchema = new Schema(
             required: true,
             minlength: 6
         },
+        streak: {
+            type: Number,
+            default: 0
+        },
+        lastLogin: {
+            type: Date,
+            default: null
+        }
     },
     {
         timestamps: true,
