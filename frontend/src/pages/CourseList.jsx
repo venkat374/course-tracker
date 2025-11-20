@@ -1,6 +1,8 @@
+// src/pages/CourseList.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const CourseRow = ({ course, deleteCourse }) => (
   <tr>
@@ -59,7 +61,8 @@ const CourseRow = ({ course, deleteCourse }) => (
   </tr>
 );
 
-function CourseList({ loggedInUserId, authToken }) {
+function CourseList() {
+  const { authToken, userId } = useAuth();
   const [courses, setCourses] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -70,7 +73,7 @@ function CourseList({ loggedInUserId, authToken }) {
   // Fetch courses
   useEffect(() => {
     if (!authToken) return;
-    if (!loggedInUserId) return;
+    if (!userId) return;
 
     setLoading(true);
     setError("");
@@ -86,12 +89,10 @@ function CourseList({ loggedInUserId, authToken }) {
       })
       .catch((err) => {
         console.error("Error fetching courses:", err);
-        setError(
-          err.response?.data?.message || "Failed to load tracked courses."
-        );
+        setError(err.response?.data?.message || "Failed to load tracked courses.");
         setLoading(false);
       });
-  }, [authToken, loggedInUserId]);
+  }, [authToken, userId]);
 
   // Delete a course
   const deleteCourse = (id) => {

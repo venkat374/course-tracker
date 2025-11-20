@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function AddCourse({ loggedInUserId }) {
+function AddCourse() {
+  const { userId, authToken } = useAuth();
+  const navigate = useNavigate();
+
   const [courseName, setCourseName] = useState("");
   const [status, setStatus] = useState("Ongoing");
   const [instructor, setInstructor] = useState("");
@@ -12,7 +16,8 @@ function AddCourse({ loggedInUserId }) {
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
   const [addError, setAddError] = useState("");
-  const navigate = useNavigate();
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -23,40 +28,35 @@ function AddCourse({ loggedInUserId }) {
       setAddError("Course Name is required.");
       return;
     }
+
     if (progress < 0 || progress > 100) {
       setAddError("Progress must be between 0 and 100.");
       return;
     }
 
     const newCourse = {
-      userId: loggedInUserId,
+      userId,
       courseName,
       status,
       instructor: instructor.trim() || null,
       completionDate: completionDate || null,
       certificateLink: certificateLink.trim() || null,
-      progress: parseInt(progress, 10),
+      progress: Number(progress),
       notes: notes.trim() || null,
     };
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/courses/`,
-        newCourse
+        `${backendUrl}/courses`,
+        newCourse,
+        { headers: { "x-auth-token": authToken } }
       );
-      setMessage(response.data.message);
 
-      setCourseName("");
-      setStatus("Ongoing");
-      setInstructor("");
-      setCompletionDate("");
-      setCertificateLink("");
-      setProgress(0);
-      setNotes("");
+      setMessage(response.data.message || "Course added!");
 
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 1200);
     } catch (error) {
       console.error("Error adding tracked course:", error);
       setAddError(
@@ -74,22 +74,21 @@ function AddCourse({ loggedInUserId }) {
       {addError && <div className="alert alert-danger mt-3">{addError}</div>}
 
       <form onSubmit={onSubmit} className="mt-4">
+
         <div className="form-group mb-3">
-          <label htmlFor="courseName">Course Name:</label>
+          <label>Course Name:</label>
           <input
             type="text"
-            id="courseName"
             className="form-control"
-            required
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
+            required
           />
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="status">Status:</label>
+          <label>Status:</label>
           <select
-            id="status"
             className="form-control"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -101,10 +100,9 @@ function AddCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="instructor">Instructor (Optional):</label>
+          <label>Instructor (Optional):</label>
           <input
             type="text"
-            id="instructor"
             className="form-control"
             value={instructor}
             onChange={(e) => setInstructor(e.target.value)}
@@ -112,10 +110,9 @@ function AddCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="completionDate">Completion Date (Optional):</label>
+          <label>Completion Date (Optional):</label>
           <input
             type="date"
-            id="completionDate"
             className="form-control"
             value={completionDate}
             onChange={(e) => setCompletionDate(e.target.value)}
@@ -123,10 +120,9 @@ function AddCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="certificateLink">Certificate Link (Optional):</label>
+          <label>Certificate Link (Optional):</label>
           <input
             type="text"
-            id="certificateLink"
             className="form-control"
             value={certificateLink}
             onChange={(e) => setCertificateLink(e.target.value)}
@@ -134,33 +130,29 @@ function AddCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="progress">Progress (%):</label>
+          <label>Progress (%):</label>
           <input
             type="number"
-            id="progress"
             className="form-control"
-            value={progress}
-            onChange={(e) => setProgress(e.target.value)}
             min="0"
             max="100"
+            value={progress}
+            onChange={(e) => setProgress(e.target.value)}
           />
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="notes">Notes (Optional):</label>
+          <label>Notes (Optional):</label>
           <textarea
-            id="notes"
             className="form-control"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           ></textarea>
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary">
-            Add Course
-          </button>
-        </div>
+        <button type="submit" className="btn btn-primary">
+          Add Course
+        </button>
       </form>
     </div>
   );

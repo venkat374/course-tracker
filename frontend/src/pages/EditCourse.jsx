@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function EditCourse({ loggedInUserId }) {
+function EditCourse() {
+  const { userId, authToken } = useAuth();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [courseName, setCourseName] = useState("");
   const [status, setStatus] = useState("Ongoing");
   const [instructor, setInstructor] = useState("");
@@ -10,24 +15,24 @@ function EditCourse({ loggedInUserId }) {
   const [certificateLink, setCertificateLink] = useState("");
   const [progress, setProgress] = useState(0);
   const [notes, setNotes] = useState("");
+
   const [message, setMessage] = useState("");
   const [editError, setEditError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  // Fetch course details
   useEffect(() => {
-    if (!loggedInUserId) {
-      setEditError("User not logged in. Please log in to edit courses.");
-      return;
-    }
-
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    if (!authToken) return;
 
     axios
-      .get(`${backendUrl}/courses/${id}`)
-      .then((response) => {
-        const course = response.data;
+      .get(`${backendUrl}/courses/${id}`, {
+        headers: { "x-auth-token": authToken },
+      })
+      .then((res) => {
+        const course = res.data;
+
         setCourseName(course.courseName || "");
         setStatus(course.status || "Ongoing");
         setInstructor(course.instructor || "");
@@ -39,26 +44,26 @@ function EditCourse({ loggedInUserId }) {
         setCertificateLink(course.certificateLink || "");
         setProgress(course.progress || 0);
         setNotes(course.notes || "");
+
+        setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching course for edit:", error);
-        setEditError(
-          error.response?.data?.message ||
-            "Failed to load course details for editing."
-        );
+      .catch((err) => {
+        console.error("Error fetching course for edit:", err);
+        setEditError(err.response?.data?.message || "Failed to load course.");
+        setLoading(false);
       });
-  }, [id, loggedInUserId]);
+  }, [id, authToken]);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setEditError("");
 
-    // Client-side Validation
     if (!courseName.trim()) {
       setEditError("Course Name is required.");
       return;
     }
+
     if (progress < 0 || progress > 100) {
       setEditError("Progress must be between 0 and 100.");
       return;
@@ -75,24 +80,28 @@ function EditCourse({ loggedInUserId }) {
     };
 
     try {
-      const backendUrl = import.meta.env.VITE_BACKEND_URL;
-      const response = await axios.patch(
+      const res = await axios.patch(
         `${backendUrl}/courses/${id}`,
-        updatedCourse
+        updatedCourse,
+        { headers: { "x-auth-token": authToken } }
       );
 
-      setMessage(response.data.message || "Course updated successfully!");
+      setMessage(res.data.message || "Course updated successfully!");
+
       setTimeout(() => {
         navigate("/");
-      }, 2000);
-    } catch (error) {
-      console.error("Error updating course:", error);
+      }, 1200);
+    } catch (err) {
+      console.error("Error updating course:", err);
       setEditError(
-        error.response?.data?.message ||
-          "Failed to update course. Please try again."
+        err.response?.data?.message || "Failed to update course. Please try again."
       );
     }
   };
+
+  if (loading) {
+    return <div className="container mt-4">Loading course...</div>;
+  }
 
   return (
     <div className="container mt-4">
@@ -103,21 +112,19 @@ function EditCourse({ loggedInUserId }) {
 
       <form onSubmit={onSubmit} className="mt-4">
         <div className="form-group mb-3">
-          <label htmlFor="courseName">Course Name:</label>
+          <label>Course Name</label>
           <input
             type="text"
-            id="courseName"
             className="form-control"
-            required
             value={courseName}
             onChange={(e) => setCourseName(e.target.value)}
+            required
           />
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="status">Status:</label>
+          <label>Status</label>
           <select
-            id="status"
             className="form-control"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
@@ -129,10 +136,9 @@ function EditCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="instructor">Instructor (Optional):</label>
+          <label>Instructor (Optional)</label>
           <input
             type="text"
-            id="instructor"
             className="form-control"
             value={instructor}
             onChange={(e) => setInstructor(e.target.value)}
@@ -140,10 +146,9 @@ function EditCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="completionDate">Completion Date (Optional):</label>
+          <label>Completion Date (Optional)</label>
           <input
             type="date"
-            id="completionDate"
             className="form-control"
             value={completionDate}
             onChange={(e) => setCompletionDate(e.target.value)}
@@ -151,10 +156,9 @@ function EditCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="certificateLink">Certificate Link (Optional):</label>
+          <label>Certificate Link (Optional)</label>
           <input
             type="text"
-            id="certificateLink"
             className="form-control"
             value={certificateLink}
             onChange={(e) => setCertificateLink(e.target.value)}
@@ -162,10 +166,9 @@ function EditCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="progress">Progress (%):</label>
+          <label>Progress (%)</label>
           <input
             type="number"
-            id="progress"
             className="form-control"
             value={progress}
             onChange={(e) => setProgress(e.target.value)}
@@ -175,20 +178,17 @@ function EditCourse({ loggedInUserId }) {
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="notes">Notes (Optional):</label>
+          <label>Notes (Optional)</label>
           <textarea
-            id="notes"
             className="form-control"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           ></textarea>
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary">
-            Update Course
-          </button>
-        </div>
+        <button type="submit" className="btn btn-primary">
+          Update Course
+        </button>
       </form>
     </div>
   );

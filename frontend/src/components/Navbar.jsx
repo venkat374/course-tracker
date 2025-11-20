@@ -1,11 +1,13 @@
-// frontend/components/Navbar.jsx
+// src/components/Navbar.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
-const Navbar = ({ authToken, username, handleLogout }) => {
+const Navbar = () => {
+  const { authToken, username, logout } = useAuth();
+
   const [streakCount, setStreakCount] = useState(() => {
-    // safe local fallback (does NOT force 72)
     const stored = localStorage.getItem("streakCount");
     if (stored === null) return 0;
     const n = Number(stored);
@@ -37,7 +39,6 @@ const Navbar = ({ authToken, username, handleLogout }) => {
         localStorage.setItem("streakCount", String(streakFromServer));
       } catch (err) {
         console.error("Failed to fetch streak:", err.response?.data || err);
-        // optional: keep old streakCount if request fails
       } finally {
         setLoadingStreak(false);
       }
@@ -60,6 +61,12 @@ const Navbar = ({ authToken, username, handleLogout }) => {
             </Link>
           </li>
 
+          <li className="navbar-item">
+            <Link to="/pomodoro" className="nav-link">
+              Pomodoro
+            </Link>
+          </li>
+
           {!authToken ? (
             <>
               <li className="navbar-item">
@@ -75,7 +82,6 @@ const Navbar = ({ authToken, username, handleLogout }) => {
             </>
           ) : (
             <>
-              {/* Streak icon + counter */}
               <li className="navbar-item d-flex align-items-center mx-2">
                 <span
                   role="img"
@@ -99,7 +105,7 @@ const Navbar = ({ authToken, username, handleLogout }) => {
                 <button
                   type="button"
                   className="nav-link btn btn-link p-0"
-                  onClick={handleLogout}
+                  onClick={logout}
                   style={{ textDecoration: "none" }}
                 >
                   Logout {username ? `(${username})` : ""}

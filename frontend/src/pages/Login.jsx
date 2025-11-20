@@ -1,95 +1,89 @@
+// frontend/pages/Login.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-function Login({ setLoggedInUserId, setAuthToken }) {
+const Login = () => {
+  const navigate = useNavigate();
+  const { login } = useAuth();   // 🚀 AuthContext login function
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const onSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setErrorMsg("");
 
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/auth/login`,
-        {
-          username,
-          password,
-        }
+        { username, password }
       );
 
-      const { token, user } = response.data;
+      // Backend returns shape:
+      // { token, user: { id, username, streak }, message }
+      const { token, user } = res.data;
 
-      localStorage.setItem("authToken", token);
-      localStorage.setItem("loggedInUserId", user.id);
-      localStorage.setItem('username', user.username);
-      localStorage.setItem("streak", user.streak);
+      // Save into AuthContext
+      login({
+        token,
+        username: user.username,
+        userId: user.id,
+      });
 
-      setAuthToken(token);
-      setLoggedInUserId(user.id);
+      navigate("/"); // redirect to home
+    } catch (err) {
+      console.error("Login error:", err);
 
-      if (typeof setstreak === "function") {
-        setstreak(user.streak);
+      if (err.response?.data?.message) {
+        setErrorMsg(err.response.data.message);
+      } else {
+        setErrorMsg("Login failed. Try again.");
       }
-  
-      navigate("/");
-    }
-    catch (err) {
-      console.error(
-        "Login error:",
-        err.response?.data?.message || err.message
-      );
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Please check your credentials."
-      );
     }
   };
 
   return (
-    <div className="container mt-4" style={{ maxWidth: "400px" }}>
-      <h3>Login</h3>
+    <div className="container mt-5">
+      <h2 className="mb-3">Login</h2>
 
-      {error && <div className="alert alert-danger mt-3">{error}</div>}
+      {errorMsg && (
+        <div className="alert alert-danger">{errorMsg}</div>
+      )}
 
-      <form onSubmit={onSubmit} className="mt-4">
+      <form onSubmit={handleSubmit}>
+
         <div className="form-group mb-3">
-          <label htmlFor="username">Username:</label>
+          <label>Username</label>
           <input
             type="text"
-            id="username"
             className="form-control"
-            required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
+            required
           />
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="password">Password:</label>
+          <label>Password</label>
           <input
             type="password"
-            id="password"
             className="form-control"
-            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
+            required
           />
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary w-100">
-            Login
-          </button>
-        </div>
+        <button className="btn btn-primary" type="submit">
+          Login
+        </button>
+
       </form>
     </div>
   );
-}
+};
 
 export default Login;

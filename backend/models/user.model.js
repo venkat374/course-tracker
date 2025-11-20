@@ -24,6 +24,10 @@ const userSchema = new Schema(
         lastLogin: {
             type: Date,
             default: null
+        },
+        pomodoroSettings: {
+            focusMinutes: { type: Number, default: 25 },
+            breakMinutes: { type: Number, default: 5 }
         }
     },
     {

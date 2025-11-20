@@ -9,6 +9,7 @@ function Register() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -16,24 +17,16 @@ function Register() {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/auth/register`,
-        {
-          username,
-          password,
-        }
-      );
+      const res = await axios.post(`${backendUrl}/auth/register`, {
+        username,
+        password,
+      });
 
-      setMessage(response.data.message || "Registration successful!");
+      setMessage(res.data.message || "Registration successful!");
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (err) {
-      console.error(
-        "Registration error:",
-        err.response?.data?.message || err.message
-      );
+      console.error("Registration error:", err);
       setError(
         err.response?.data?.message ||
           "Registration failed. Please try again."
@@ -50,36 +43,32 @@ function Register() {
 
       <form onSubmit={onSubmit} className="mt-4">
         <div className="form-group mb-3">
-          <label htmlFor="username">Username:</label>
+          <label>Username:</label>
           <input
             type="text"
-            id="username"
             className="form-control"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter a username"
+            placeholder="Choose a username"
           />
         </div>
 
         <div className="form-group mb-3">
-          <label htmlFor="password">Password:</label>
+          <label>Password:</label>
           <input
             type="password"
-            id="password"
             className="form-control"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter a password"
+            placeholder="Minimum 6 characters"
           />
         </div>
 
-        <div className="form-group">
-          <button type="submit" className="btn btn-primary w-100">
-            Register
-          </button>
-        </div>
+        <button type="submit" className="btn btn-primary w-100">
+          Register
+        </button>
       </form>
     </div>
   );

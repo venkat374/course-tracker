@@ -13,7 +13,6 @@ const trackedCourseSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            minlength: 3
         },
         status: {
             type: String,

@@ -1,86 +1,79 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+// src/context/AuthContext.jsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import axios from "axios";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(() =>
-    localStorage.getItem("authToken")
-  );
-  const [username, setUsername] = useState(() =>
-    localStorage.getItem("username")
-  );
-  const [userId, setUserId] = useState(() =>
-    localStorage.getItem("loggedInUserId")
-  );
-  const [streak, setStreak] = useState(() =>
-    Number(localStorage.getItem("streakCount")) || 0
-  );
+  const [authToken, setAuthToken] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [authLoading, setAuthLoading] = useState(true);
-
+  // Load from localStorage once on mount
   useEffect(() => {
-    const init = async () => {
-      if (authToken) {
-        axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
+    const storedToken = localStorage.getItem("authToken");
+    const storedUserId = localStorage.getItem("loggedInUserId");
+    const storedUsername = localStorage.getItem("username");
 
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/auth/streak`
-          );
+    if (storedToken && storedUserId && storedUsername) {
+      setAuthToken(storedToken);
+      setUserId(storedUserId);
+      setUsername(storedUsername);
 
-          setStreak(res.data.streak);
-          localStorage.setItem("streakCount", res.data.streak);
-        } catch (err) {
-          console.error("Streak load failed:", err);
-        }
-      }
+      axios.defaults.headers.common["x-auth-token"] = storedToken;
+    }
 
-      setAuthLoading(false);
-    };
+    setLoading(false);
+  }, []);
 
-    init();
+  // Keep axios header in sync
+  useEffect(() => {
+    if (authToken) {
+      axios.defaults.headers.common["x-auth-token"] = authToken;
+    } else {
+      delete axios.defaults.headers.common["x-auth-token"];
+    }
   }, [authToken]);
 
-  const login = (token, user) => {
+  const login = ({ token, userId, username }) => {
     setAuthToken(token);
-    setUsername(user.username);
-    setUserId(user.id);
-    setStreak(user.streak);
+    setUserId(userId);
+    setUsername(username);
 
     localStorage.setItem("authToken", token);
-    localStorage.setItem("username", user.username);
-    localStorage.setItem("loggedInUserId", user.id);
-    localStorage.setItem("streakCount", user.streak);
-
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    localStorage.setItem("loggedInUserId", userId);
+    localStorage.setItem("username", username);
   };
 
   const logout = () => {
     setAuthToken(null);
-    setUsername(null);
     setUserId(null);
-    setStreak(0);
+    setUsername(null);
 
-    localStorage.clear();
-    delete axios.defaults.headers.common["Authorization"];
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("loggedInUserId");
+    localStorage.removeItem("username");
+  };
+
+  const value = {
+    authToken,
+    userId,
+    username,
+    loading,
+    login,
+    logout,
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        authToken,
-        username,
-        userId,
-        streak,
-        isAuthenticated: Boolean(authToken),
-        authLoading,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

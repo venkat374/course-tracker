@@ -131,4 +131,46 @@ router.get("/streak", async (req, res) => {
   }
 });
 
+//get pomodoro timer preference
+router.get("/pomodoro", async (req, res) => {
+  try {
+    const auth = req.headers.authorization;
+    if (!auth) return res.status(401).json({ message: "Missing token" });
+
+    const token = auth.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json(user.pomodoroSettings);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+//update pomodoro preference
+router.put("/pomodoro", async (req, res) => {
+  try {
+    const auth = req.headers.authorization;
+    if (!auth) return res.status(401).json({ message: "Missing token" });
+
+    const token = auth.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const { focusMinutes, breakMinutes } = req.body;
+
+    const user = await User.findByIdAndUpdate(
+      decoded.id,
+      { pomodoroSettings: { focusMinutes, breakMinutes } },
+      { new: true }
+    );
+
+    res.json(user.pomodoroSettings);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 module.exports = router;
