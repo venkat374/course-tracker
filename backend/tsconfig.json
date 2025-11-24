@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    /* 1. Project Structure and Output 
+      These options ensure your compiled files (JS) go into a separate folder (dist).
+    */
+    "rootDir": "./src",                          /* Specify the root directory of source files. */
+    "outDir": "./dist",                          /* Redirect output structure to the 'dist' folder. */
+    "moduleResolution": "node",                  /* Resolve modules using Node.js style (CommonJS). */
+    "esModuleInterop": true,                     /* Allows for cleaner imports from CommonJS modules. */
+    "allowJs": false,                            /* Disallow JS files as input to the compiler. */
+    "sourceMap": true,                           /* Create sourcemaps for debugging. */
+    
+    /* 2. Module and Language Target 
+      Configures the output format and JavaScript version.
+    */
+    "target": "ES2020",                          /* Compile to a recent version of JavaScript. */
+    "module": "CommonJS",                        /* Compile into the Node.js module format. */
+    "lib": ["ES2020"],                           /* Include default library files for the environment. */
+    
+    /* 3. Strictness and Type-Checking (Highly Recommended)
+      These settings catch the most common and subtle errors during compilation.
+    */
+    "strict": true,                              /* Enable all strict type-checking options. */
+    "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type. */
+    "strictNullChecks": true,                    /* Enable stricter checking of null and undefined. */
+    "skipLibCheck": true,                        /* Skip type checking of declaration files (*.d.ts). Helps with build speed. */
+    "forceConsistentCasingInFileNames": true,    /* Ensure file references only differ in casing. */
+    
+    /* 4. Emit (Code Generation)
+      Ensures the compiler only generates files and does not modify the source.
+    */
+    "noEmitOnError": true,                       /* Do not emit output if any errors were found. */
+    "removeComments": true,                      /* Strip comments from the compiled JS output. */
+    "declaration": false                         /* Do not create .d.ts files for this internal backend project. */
+  },
+  
+  /* 5. Files to Include and Exclude
+    Tells the compiler where to look and what to ignore.
+  */
+  "include": [
+    "./src/**/*.ts"                              /* Include all .ts files in the src folder and its subdirectories. */
+  ],
+  "exclude": [
+    "./node_modules",                            /* Exclude all files in node_modules */
+    "./dist"                                     /* Exclude the output directory from being checked as source */
+  ]
+}
