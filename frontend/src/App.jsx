@@ -12,7 +12,7 @@ import AddCourse from "./pages/AddCourse.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 
-// Always run ONCE at import time
+// Run once at import time
 const initialToken = localStorage.getItem("authToken");
 if (initialToken) {
   axios.defaults.headers.common["x-auth-token"] = initialToken;
