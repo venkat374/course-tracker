@@ -11,9 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowLeft, Save, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// ----------------------------
 // Types
-// ----------------------------
 interface CourseResponse {
   courseName: string;
   platform: string;
