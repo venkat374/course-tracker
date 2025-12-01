@@ -1,12 +1,14 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+// Pomodoro Interface
 export interface IPomodoroSession extends Document {
     userId: string;
-    courseId?: string; // Optional: link to a specific course
-    duration: number; // in minutes
+    courseId?: string; // Optional
+    duration: number;
     completedAt: Date;
 }
 
+// Schema
 const PomodoroSessionSchema = new Schema<IPomodoroSession>(
     {
         userId: {

@@ -3,9 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
 
-// ---------------------------
-// TYPES
-// ---------------------------
+// Types
 interface AuthBody {
   username: string;
   password: string;
@@ -20,9 +18,7 @@ interface TokenPayload {
   id: string;
 }
 
-// ---------------------------
-// REGISTER USER
-// ---------------------------
+// Register User
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const { username, password }: AuthBody = req.body;
@@ -55,9 +51,7 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------
-// LOGIN USER (Calendar-Based Streak Logic)
-// ---------------------------
+// Login User
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { username, password }: AuthBody = req.body;
@@ -73,7 +67,7 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials." });
 
-    // ------------- CALENDAR BASED STREAK LOGIC -------------
+    // Streak logic (based on calendar)
     const today = new Date();
     const todayStr = today.toDateString();
 
@@ -122,9 +116,7 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------
-// GET USER STATS (Streak + Focus Time)
-// ---------------------------
+// Get User Stats
 export const getUserStats = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.userId);
@@ -140,12 +132,7 @@ export const getUserStats = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------
-// LOG FOCUS SESSION
-// ---------------------------
-// ---------------------------
-// LOG FOCUS SESSION & CHECK BADGES
-// ---------------------------
+// Log Focus Session
 import PomodoroSession from "../models/pomodoro.model";
 
 export const logFocusSession = async (req: Request, res: Response) => {
@@ -237,9 +224,8 @@ export const logFocusSession = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------
-// GET POMODORO SETTINGS
-// ---------------------------
+
+// Get Pomodoro Settings
 export const getPomodoroSettings = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.userId);
@@ -252,9 +238,7 @@ export const getPomodoroSettings = async (req: Request, res: Response) => {
   }
 };
 
-// ---------------------------
-// UPDATE POMODORO SETTINGS
-// ---------------------------
+// Update Pomodoro Settings
 export const updatePomodoroSettings = async (req: Request, res: Response) => {
   try {
     const { focusMinutes, breakMinutes }: PomodoroBody = req.body;

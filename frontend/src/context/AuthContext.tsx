@@ -29,10 +29,10 @@ interface ProviderProps {
   children: ReactNode;
 }
 
-// Create strongly-typed context
+// Typed context
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Hook for easy access
+// Hook
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) {
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<ProviderProps> = ({ children }) => {
   const [username, setUsername] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load from localStorage once on mount
+  // Load from localStorage on mount
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     const storedUserId = localStorage.getItem("loggedInUserId");

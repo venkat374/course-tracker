@@ -1,8 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 
-//
-// 1️⃣ TS Interface: This defines the shape of a User document
-//
+// User Interface
 export interface PomodoroSettings {
   focusMinutes: number;
   breakMinutes: number;
@@ -11,7 +9,7 @@ export interface PomodoroSettings {
 export interface Badge {
   id: string;
   name: string;
-  icon: string; // Emoji or icon name
+  icon: string;
   description: string;
   dateEarned: Date;
 }
@@ -29,9 +27,7 @@ export interface IUser extends Document {
   updatedAt: Date;
 }
 
-//
-// 2️⃣ Mongoose Schema with full types
-//
+// Schema
 const UserSchema = new Schema<IUser>(
   {
     username: {
@@ -70,7 +66,7 @@ const UserSchema = new Schema<IUser>(
 
     focusHistory: [
       {
-        date: { type: String, required: true }, // Format: "YYYY-MM-DD"
+        date: { type: String, required: true },
         minutes: { type: Number, required: true },
         sessions: { type: Number, default: 0 },
       },
@@ -87,12 +83,9 @@ const UserSchema = new Schema<IUser>(
     ],
   },
   {
-    timestamps: true, // adds createdAt + updatedAt
+    timestamps: true,
   }
 );
 
-//
-// 3️⃣ Export the model
-//
 const User = mongoose.model<IUser>("User", UserSchema);
 export default User;

@@ -1,26 +1,22 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-//
-// 1️⃣ TypeScript Interface — defines the shape of your course document
-//
+// Course Interface
 export interface ICourse extends Document {
-  userId: string;           // reference to a user
+  userId: string;
   courseName: string;
   platform: string;
   status: "Ongoing" | "Completed" | "Planned";
   instructor?: string | null;
   completionDate?: Date | null;
   certificateLink?: string | null;
-  progress: number;         // 0–100
+  progress: number;
   notes?: string | null;
 
   createdAt: Date;
   updatedAt: Date;
 }
 
-//
-// 2️⃣ Schema Definition
-//
+// Schema
 const CourseSchema = new Schema<ICourse>(
   {
     userId: {
@@ -82,12 +78,9 @@ const CourseSchema = new Schema<ICourse>(
     },
   },
   {
-    timestamps: true, // adds createdAt + updatedAt
+    timestamps: true,
   }
 );
 
-//
-// 3️⃣ Create and Export the Model
-//
 const Course = mongoose.model<ICourse>("Course", CourseSchema);
 export default Course;

@@ -1,3 +1,4 @@
+// Layout for navbar (mobile)
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, BookOpen, LogOut } from "lucide-react";

@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import Course from "../models/course.model";
 import User from "../models/user.model";
 
-// -----------------------------
-// GET all courses for the logged-in user
-// -----------------------------
+// Get All Courses
 export const getCourses = async (req: Request, res: Response) => {
   try {
     const userId = req.userId; // comes from authMiddleware
@@ -22,9 +20,7 @@ export const getCourses = async (req: Request, res: Response) => {
   }
 };
 
-// -----------------------------
-// CREATE a course
-// -----------------------------
+// Create a Course
 export const createCourse = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
@@ -35,7 +31,7 @@ export const createCourse = async (req: Request, res: Response) => {
 
     const newCourse = new Course({
       userId,
-      ...req.body, // platform is included in req.body
+      ...req.body,
     });
 
     await newCourse.save();
@@ -50,9 +46,7 @@ export const createCourse = async (req: Request, res: Response) => {
   }
 };
 
-// -----------------------------
-// GET course by ID
-// -----------------------------
+// Get Course by ID
 export const getCourse = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.id;
@@ -70,9 +64,8 @@ export const getCourse = async (req: Request, res: Response) => {
   }
 };
 
-// -----------------------------
-// UPDATE a course
-// -----------------------------
+
+// Update Course by ID
 export const updatedCourse = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.id;
@@ -87,12 +80,10 @@ export const updatedCourse = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Course not found." });
     }
 
-    // Check for "3 Courses Completed" Badge
+    // Update course count and check for badge eligibility
     if (updated.status === "Completed") {
       const completedCount = await Course.countDocuments({ userId: req.userId, status: "Completed" });
       if (completedCount >= 3) {
-        // We need to add the badge to the user
-        // This is a bit of a side effect in the course controller, but it works
         const user = await User.findById(req.userId);
         if (user && !user.badges.some(b => b.id === "3-courses")) {
           user.badges.push({
@@ -117,9 +108,7 @@ export const updatedCourse = async (req: Request, res: Response) => {
   }
 };
 
-// -----------------------------
-// DELETE a course
-// -----------------------------
+// Delete a Course
 export const deletedCourse = async (req: Request, res: Response) => {
   try {
     const courseId = req.params.id;

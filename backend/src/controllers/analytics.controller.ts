@@ -25,8 +25,6 @@ export const getAnalytics = async (req: Request, res: Response) => {
 
         // 2. Pomodoro Stats by Course
         // Join PomodoroSessions with Courses to get course names
-        // This might be complex with simple aggregation if we want course names
-        // For now, let's just get session counts per courseId
         const sessionStats = await PomodoroSession.aggregate([
             { $match: { userId } },
             {
